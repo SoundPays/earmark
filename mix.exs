@@ -17,12 +17,13 @@ defmodule Earmark.Mixfile do
   end
 
   def application do
-    [applications: []]
+    [applications: [:pygmex]]
   end
 
   defp deps do
     [{:poison, "~> 1.5", only: [:dev, :test]},
-     {:kwfuns, "~> 0.0", only: :test}]
+     {:kwfuns, "~> 0.0", only: :test},
+     {:pygmex, github: "scrogson/pygmex"},]
   end
 
   defp description do

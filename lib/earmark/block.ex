@@ -141,11 +141,11 @@ defmodule Earmark.Block do
 
   defp _parse( lines = [ %Line.Text{} | _ ], result, filename)
   do
-    {reversed_para_lines, rest, pending} = consolidate_para(lines) 
+    {reversed_para_lines, rest, pending} = consolidate_para(lines)
     case pending do
       {nil, _} -> true
       {pending, lnb} ->
-        emit_error filename, lnb, :warning, "Closing unclosed backquotes #{pending} at end of input" 
+        emit_error filename, lnb, :warning, "Closing unclosed backquotes #{pending} at end of input"
     end
     line_text = (for line <- (reversed_para_lines |> Enum.reverse), do: line.line)
     _parse(rest, [ %Para{lines: line_text} | result ], filename)
@@ -158,10 +158,10 @@ defmodule Earmark.Block do
   # in the second we combine adjacent items into lists. This is pass one
 
   defp _parse( [first = %Line.ListItem{type: type} | rest ], result, filename) do
-    {spaced, list_lines, rest, offset} = 
+    {spaced, list_lines, rest, offset} =
       case read_list_lines(rest, opens_inline_code(first)) do
         {s, ll, r, {_btx, lnb}} ->
-          # emit_error filename, lnb, :warning, "Closing unclosed backquotes #{pending_btx} at end of input" 
+          # emit_error filename, lnb, :warning, "Closing unclosed backquotes #{pending_btx} at end of input"
           {s, ll, r, lnb}
         {s, ll, r} -> {s, ll, r, 0}
       end
@@ -193,7 +193,10 @@ defmodule Earmark.Block do
       !match?(%Line.Fence{delimiter: ^delimiter, language: _}, line)
     end)
     rest = if length(rest) == 0, do: rest, else: tl(rest)
-    code = (for line <- code_lines, do: line.line)
+    code =
+    (for line <- code_lines, do: line.line)
+    |> Enum.join("\n")
+    |> Pygmex.highlight(String.to_atom(language), [])
     _parse(rest, [ %Code{lines: code, language: language} | result ], filename)
   end
 
