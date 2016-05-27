@@ -23,7 +23,7 @@ defmodule Earmark.Mixfile do
   defp deps do
     [{:poison, "~> 1.5", only: [:dev, :test]},
      {:kwfuns, "~> 0.0", only: :test},
-     {:pygmex, github: "scrogson/pygmex"},]
+     {:pygmex, github: "bsidoruk/pygmex"},]
   end
 
   defp description do
